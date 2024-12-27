@@ -1,5 +1,6 @@
 const video = document.getElementById("video");
 
+// Load models
 Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
     faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
@@ -20,29 +21,44 @@ function startWebcam() {
         });
 }
 
-function getLabeledFaceDescriptions() {
-    const labels = ["dheep", "akbar"];
+async function getClassNames() {
+    // Fetch class names dynamically from the API
+    const response = await fetch('http://127.0.0.1:8000/api/classes');
+    if (!response.ok) {
+        console.error('Failed to fetch class names');
+        return [];
+    }
+    return await response.json();
+}
+
+async function getLabeledFaceDescriptions() {
+    const labels = await getClassNames(); // Get class names from the API
     return Promise.all(
         labels.map(async (label) => {
             const descriptions = [];
-            for (let i = 1; i <= 2; i++) {
-                const img = await faceapi.fetchImage(`./labels/${label}/${i}.jpg`);
-                const detections = await faceapi
-                    .detectSingleFace(img)
-                    .withFaceLandmarks()
-                    .withFaceDescriptor();
+            for (let i = 1; i <= label.image_count; i++) {  // Assuming 2 images per class
+                try {
+                    const img = await faceapi.fetchImage(`http://127.0.0.1:8000/images/${label.class_name}/${i}.jpg`);
+                    const detections = await faceapi
+                        .detectSingleFace(img)
+                        .withFaceLandmarks()
+                        .withFaceDescriptor();
 
-                // Ensure detections is valid before accessing the descriptor
-                if (detections) {
-                    descriptions.push(detections.descriptor);
-                } else {
-                    console.warn(`No face detected in image for label: ${label}`);
+                    // Ensure detections are valid before accessing the descriptor
+                    if (detections) {
+                        descriptions.push(detections.descriptor);
+                    } else {
+                        console.warn(`No face detected in image for label: ${label.class_name}`);
+                    }
+                } catch (error) {
+                    console.error(`Failed to fetch or process image for label: ${label.class_name}, image ${i}`, error);
                 }
             }
-            return new faceapi.LabeledFaceDescriptors(label, descriptions);
+            return new faceapi.LabeledFaceDescriptors(label.class_name, descriptions);
         })
     );
 }
+
 
 video.addEventListener("play", async () => {
     const labeledFaceDescriptors = await getLabeledFaceDescriptions();
