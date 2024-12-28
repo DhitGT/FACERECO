@@ -30,6 +30,31 @@ async function getClassNames() {
     }
     return await response.json();
 }
+async function getAbsen() {
+    // Fetch class names dynamically from the API
+    const response = await fetch('http://127.0.0.1:8000/api/absen');
+    if (!response.ok) {
+        console.error('Failed to fetch class names');
+        return [];
+    }
+    return await response.json();
+}
+
+const speakText = (text2) => {
+    const text = text2
+
+    // Check if the browser supports SpeechSynthesis
+    if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'id-ID'; // Indonesian language code
+
+        // Speak the text
+        window.speechSynthesis.speak(msg);
+    } else {
+        alert("Text-to-Speech is not supported in this browser.");
+    }
+};
 
 async function getLabeledFaceDescriptions() {
     const labels = await getClassNames(); // Get class names from the API
@@ -65,36 +90,87 @@ video.addEventListener("play", async () => {
     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
 
     const canvas = faceapi.createCanvasFromMedia(video);
-    document.body.append(canvas);
+    document.getElementById('container-vidio').appendChild(canvas);
+
+    console.log("canvas")
+
 
     const displaySize = { width: video.width, height: video.height };
     faceapi.matchDimensions(canvas, displaySize);
 
-    setInterval(async () => {
-        const detections = await faceapi
-            .detectAllFaces(video)
-            .withFaceLandmarks()
-            .withFaceDescriptors();
+    let lastLabel = null;
+    let lastLabelTime = null;
+    let detectionInterval = null;
+    let attendancePosted = false; // Flag to ensure postAttendance is executed only once
+    async function startDetection() {
+        attendancePosted = false;
+        let listUdahAbsen = await getAbsen();
+        detectionInterval = setInterval(async () => {
+            const detections = await faceapi
+                .detectAllFaces(video)
+                .withFaceLandmarks()
+                .withFaceDescriptors();
 
-        // Ensure detections are valid before processing
-        if (detections && detections.length > 0) {
-            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+            if (detections && detections.length > 0) {
+                const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+                canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 
-            const results = resizedDetections.map((d) => {
-                return faceMatcher.findBestMatch(d.descriptor);
-            });
-
-            console.log("RESULT : ", results)
-
-            results.forEach((result, i) => {
-                const box = resizedDetections[i].detection.box;
-                const drawBox = new faceapi.draw.DrawBox(box, {
-                    label: result,
+                const results = resizedDetections.map((d) => {
+                    return faceMatcher.findBestMatch(d.descriptor);
                 });
-                drawBox.draw(canvas);
-            });
-        }
-    }, 100);
+
+                console.log("RESULT : ", results);
+
+                results.forEach(async (result, i) => {
+                    const box = resizedDetections[i].detection.box;
+                    const drawBox = new faceapi.draw.DrawBox(box, {
+                        label: result.toString(), // Convert to string for drawing
+                    });
+                    drawBox.draw(canvas);
+
+                    const label = result.label;
+
+                    // Check if the label is not "unknown"
+                    if (label !== "unknown") {
+                        const now = Date.now();
+
+                        // Check if the label matches the last label and has remained the same for 1 second
+
+
+                        if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
+                            if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
+                                console.log(`Stopping detection, label "${label}" remained the same for 1 second.`);
+                                clearInterval(detectionInterval); // Stop the detection
+
+                                const currentTime = getCurrentTime();
+                                showPopup(
+                                    `Selamat datang, ${label}. Anda absen di jam ${currentTime}`
+                                );
+                                speakText(`Selamat datang, ${label}`)
+                                postAttendance(label); // Call only once
+                                attendancePosted = true; // Set the flag
+
+                                await new Promise((resolve) => setTimeout(resolve, 4000));
+                                // Reset and restart detection
+                                lastLabel = null;
+                                lastLabelTime = null;
+                                startDetection(); // Restart the loop
+                            }
+                        } else {
+                            lastLabel = label; // Update the label
+                            lastLabelTime = now; // Update the time
+                        }
+                    } else {
+                        // Reset the tracking if the label is "unknown"
+                        lastLabel = null;
+                        lastLabelTime = null;
+                        attendancePosted = false; // Reset the flag
+                    }
+                });
+            }
+        }, 100);
+    }
+    startDetection()
+
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Models\Absen;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,27 @@ class DashboardController extends Controller
         $absens = Absen::where('date', $dateFilter)->get();
 
         return view('dashboard.index', compact('absens', 'dateFilter'));
+    }
+
+    public function getAttendanceByCurrentTime()
+    {
+        // Get the current date and time
+        $now = Carbon::now();
+        $currentDate = $now->toDateString(); // Format YYYY-MM-DD
+        $currentTime = $now->toTimeString(); // Format HH:MM:SS
+
+        // Query the database
+        $attendanceRecords = DB::table('absens')
+            ->select('name')
+            ->whereDate('date', $currentDate) // Match the current date
+            // ->whereTime('entry_hour', '<=', $currentTime) // Entry hours before or equal to now
+            ->get();
+
+        // Return the response
+        return response()->json(
+
+            $attendanceRecords,
+        );
     }
 
     public function store(Request $request)
@@ -38,7 +60,7 @@ class DashboardController extends Controller
             ]);
         } catch (\Exception $e) {
             // Log the error for debugging
-            \Log::error('Error adding attendance record: ' . $e->getMessage());
+            // \Log::error('Error adding attendance record: ' . $e->getMessage());
 
             // Return error response as JSON
             return response()->json([
@@ -48,5 +70,4 @@ class DashboardController extends Controller
             ]);
         }
     }
-
 }
