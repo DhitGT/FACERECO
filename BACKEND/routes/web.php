@@ -56,5 +56,6 @@ Route::get('/', function () {
 })->name('classes');
 
 Route::get('/api/classes', [ClassController::class, 'getAllClassNames']);
+Route::get('/api/absen', [DashboardController::class, 'getAttendanceByCurrentTime']);
 
 
