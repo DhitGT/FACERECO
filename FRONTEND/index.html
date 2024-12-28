@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,15 +17,22 @@
         #popup {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* Changed to white for non-transparent background */
+            color: black;
+            /* Changed text color to black for better visibility */
             z-index: 1000;
             padding: 16px;
-            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            /* Center text */
         }
 
         #popup-overlay {
@@ -36,7 +42,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Dark overlay */
             z-index: 999;
         }
     </style>
@@ -53,7 +60,8 @@
     <main class="flex-grow flex items-center justify-center px-4">
         <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
             <div class="flex flex-col items-center">
-                <video id="video" class="border-4 border-blue-500 rounded-md mb-4 w-full max-w-lg h-80 bg-gray-200" autoplay></video>
+                <video id="video" class="border-4 border-blue-500 rounded-md mb-4 w-full max-w-lg h-80 bg-gray-200"
+                    autoplay></video>
                 <div id="clock" class="mt-4"></div>
                 <p class="text-gray-600 text-sm text-center mt-2">
                     Pastikan wajah terlihat jelas di kamera untuk mendeteksi secara akurat.
@@ -61,7 +69,8 @@
             </div>
 
             <div class="mt-8 flex justify-center">
-                <button id="start-button" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition">
+                <button id="start-button"
+                    class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition">
                     Mulai Deteksi
                 </button>
             </div>
@@ -71,7 +80,7 @@
     <!-- Modal Popup -->
     <div id="popup-overlay"></div>
     <div id="popup">
-        <p id="popup-message" class="text-center text-gray-800"></p>
+        <p id="popup-message" class="text-2xl font-bold text-gray-800"></p> <!-- Increased text size -->
         <div class="mt-4 text-center">
             <button id="close-button" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
                 Tutup
@@ -87,118 +96,93 @@
     <!-- Script -->
     <script>
         const database = {
-        1: { name: "Andi", id: "12345" },
-        2: { name: "Budi", id: "67890" },
-    }; // Simulasi database lokal
+            1: { name: "Andi", id: "12345" },
+            2: { name: "Budi", id: "67890" },
+        }; // Simulated local database
 
-    document.getElementById('start-button').addEventListener('click', () => {
-        // Simulasi validasi orang dalam database
-        const detectedPerson = validatePerson(database, "67890"); // ID orang yang dideteksi
-        if (detectedPerson) {
-            showPopup(`Selamat datang, ${detectedPerson.name}. Anda absen di jam ${getCurrentTime()}`);
-        }
-    });
-
-    function validatePerson(db, detectedId) {
-        for (let person in db) {
-            if (db[person].id === detectedId) {
-                return db[person];
-            }
-        }
-        return null;
-    }
-
-    function showPopup(message) {
-        const popup = document.getElementById('popup');
-        const overlay = document.getElementById('popup-overlay');
-        document.getElementById('popup-message').textContent = message;
-
-        popup.style.display = 'block';
-        overlay.style.display = 'block';
-
-        // Tutup popup secara otomatis setelah 1,5 detik
-        setTimeout(() => {
+        document.getElementById('close-button').addEventListener('click', () => {
             popup.style.display = 'none';
             overlay.style.display = 'none';
-        }, 1500);
-    }
+        })
 
-    function getCurrentTime() {
-        const now = new Date();
-        return now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
+        const attendanceEndpoint = "http://localhost:8000/dashboard"; // Replace with your API endpoint
 
-    // Update real-time clock
-    function updateClock() {
-        const clockElement = document.getElementById('clock');
-        const now = new Date();
-        clockElement.textContent = `Jam: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock(); // Initial call
-    </script>
-</body>
-
-</html>
-=======
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Absensi dengan Face Recognition</title>
-    <script defer src="face-api.min.js"></script>
-    <script defer src="script.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        #video {
-            object-fit: cover;
-        }
-    </style>
-</head>
-
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <header class="text-center p-4 bg-blue-600 text-white">
-        <h1 class="text-4xl font-bold">Sistem Absensi Face Recognition</h1>
-        <p class="mt-2">SMK NEGERI 2 KOTA BEKASI</p>
-    </header>
-
-    <main class="flex-grow flex flex-col items-center justify-center">
-        <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-5xl">
-            <div class="flex flex-col items-center">
-                <video id="video" class="border-4 border-blue-500 rounded-md mb-4 w-full h-[450px]" autoplay></video>
-                <p class="text-gray-600 text-sm">Pastikan wajah terlihat jelas di kamera untuk mendeteksi secara akurat.</p>
-            </div>
-
-            <div class="mt-6">
-                <h2 class="text-lg font-semibold text-gray-800">Cara Kerja:</h2>
-                <ul class="list-disc list-inside text-gray-700 mt-2">
-                    <li>Sistem akan mendeteksi wajah secara otomatis.</li>
-                    <li>Absensi Anda akan tercatat jika wajah dikenali.</li>
-                </ul>
-            </div>
-
-            <div class="mt-8 flex justify-center">
-                <button id="start-button" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition">Mulai Deteksi</button>
-            </div>
-        </div>
-    </main>
-
-    <footer class="p-4 bg-gray-800 text-center text-white">
-        <p>&copy; 2024 Sistem Absensi Digital. Dibuat dengan <span class="text-blue-400">JAVASCRIPT</span>.</p>
-    </footer>
-
-    <script>
-        // Script.js logic placeholder
         document.getElementById('start-button').addEventListener('click', () => {
-            // Logic to initiate face detection
-            console.log('Face detection started');
+            // Simulate validation of the person in the database
+            const detectedPerson = validatePerson(database, "67890"); // ID of the detected person
+            if (detectedPerson) {
+                const currentTime = getCurrentTime();
+                showPopup(`Selamat datang, ${detectedPerson.name}. Anda absen di jam ${currentTime}`);
+
+                // Post attendance data
+                postAttendance("dheep");
+            }
         });
+
+        function validatePerson(db, detectedId) {
+            for (let person in db) {
+                if (db[person].id === detectedId) {
+                    return db[person];
+                }
+            }
+            return null;
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('popup-overlay');
+            document.getElementById('popup-message').textContent = message;
+
+            popup.style.display = 'flex'; // Use 'flex' for fullscreen alignment
+            overlay.style.display = 'block';
+
+            // Automatically close the popup after 1.5 seconds
+            setTimeout(() => {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            }, 5000);
+        }
+
+        async function postAttendance(name) {
+            try {
+
+                await fetch('http://127.0.0.1:8000/storeAbsen', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name
+                    }),
+                })
+                    .then(response => response.json()) // Ensure to handle the JSON response
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } catch (error) {
+                console.log("rorwr", error)
+            }
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        // Update real-time clock
+        function updateClock() {
+            const clockElement = document.getElementById('clock');
+            const now = new Date();
+            clockElement.textContent = `Jam: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
     </script>
 </body>
 
 </html>
->>>>>>> 3489c45548f91266e0e874678ae01d7451a44c24
