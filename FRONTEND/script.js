@@ -40,6 +40,22 @@ async function getAbsen() {
     return await response.json();
 }
 
+const speakText = (text2) => {
+    const text = text2
+
+    // Check if the browser supports SpeechSynthesis
+    if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'id-ID'; // Indonesian language code
+
+        // Speak the text
+        window.speechSynthesis.speak(msg);
+    } else {
+        alert("Text-to-Speech is not supported in this browser.");
+    }
+};
+
 async function getLabeledFaceDescriptions() {
     const labels = await getClassNames(); // Get class names from the API
     return Promise.all(
@@ -120,7 +136,7 @@ video.addEventListener("play", async () => {
                         const now = Date.now();
 
                         // Check if the label matches the last label and has remained the same for 1 second
-                        
+
 
                         if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
                             if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
@@ -131,10 +147,11 @@ video.addEventListener("play", async () => {
                                 showPopup(
                                     `Selamat datang, ${label}. Anda absen di jam ${currentTime}`
                                 );
+                                speakText(`Selamat datang, ${label}`)
                                 postAttendance(label); // Call only once
                                 attendancePosted = true; // Set the flag
 
-                                await new Promise((resolve) => setTimeout(resolve, 4000)); 
+                                await new Promise((resolve) => setTimeout(resolve, 4000));
                                 // Reset and restart detection
                                 lastLabel = null;
                                 lastLabelTime = null;
