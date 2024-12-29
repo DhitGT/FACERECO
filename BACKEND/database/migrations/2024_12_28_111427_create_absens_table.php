@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->time('entry_hour');
+            $table->time('exit_hour')->nullable();
             $table->date('date');
             $table->timestamps();
         });

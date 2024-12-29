@@ -14,13 +14,13 @@
       }
 
       canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none; /* Allows clicks to pass through */
-            /* border: 2px solid red; Example styling */
-            border-radius: 10px; /* Example styling */
-        }
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none; /* Allows clicks to pass through */
+        /* border: 2px solid red; Example styling */
+        border-radius: 10px; /* Example styling */
+      }
 
       #popup {
         display: none;
@@ -63,6 +63,10 @@
       class="text-center p-4 bg-blue-600 text-white rounded-lg w-full max-w-4xl mx-auto"
     >
       <h1 class="text-4xl font-bold">Sistem Absensi Face Recognition</h1>
+      <h2 class="text-4xl font-bold">
+        <span id="infoAbsen"></span>
+      </h2>
+
       <p class="mt-2">SMK NEGERI 2 KOTA BEKASI</p>
     </header>
 
@@ -70,7 +74,10 @@
     <main class="flex-grow flex items-center justify-center px-4">
       <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
         <div class="flex flex-col items-center">
-          <div id="container-vidio" style="position: relative; width: 600px; height: 450px;">
+          <div
+            id="container-vidio"
+            style="position: relative; width: 600px; height: 450px"
+          >
             <video id="video" width="600" height="450" autoplay></video>
           </div>
           <div id="clock" class="mt-4"></div>
@@ -118,10 +125,9 @@
 
     <!-- Script -->
     <script>
-      const database = {
-        1: { name: "Andi", id: "12345" },
-        2: { name: "Budi", id: "67890" },
-      }; // Simulated local database
+      let infoAbsen = "";
+
+      document.getElementById("infoAbsen").textContent = infoAbsen;
 
       document.getElementById("close-button").addEventListener("click", () => {
         popup.style.display = "none";
@@ -169,6 +175,12 @@
       }
 
       async function postAttendance(name) {
+          let flag
+        if(infoAbsen === "Absen Masuk"){
+            flag = "masuk"
+        }else{
+            flag = "keluar"
+        }
         try {
           await fetch("http://127.0.0.1:8000/storeAbsen", {
             method: "POST",
@@ -178,6 +190,7 @@
             },
             body: JSON.stringify({
               name: name,
+              flag: flag,
             }),
           })
             .then((response) => response.json()) // Ensure to handle the JSON response
@@ -192,26 +205,48 @@
         }
       }
 
+      function updateAttendanceStatus() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        console.log("JAMM : ",currentHour)
+
+        // Logic for setting attendance status
+         if (
+          currentHour >= 6 &&
+          currentHour < 12
+        ) {
+          infoAbsen = "Absen Masuk";
+        } else if (currentHour >= 12) {
+          infoAbsen = "Absen Keluar";
+        }
+
+        // Update the status on the UI
+        document.getElementById("infoAbsen").textContent = infoAbsen;
+      }
+
       function getCurrentTime() {
         const now = new Date();
-        return now.toLocaleTimeString("id-ID", {
+        return now.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
         });
       }
 
-      // Update real-time clock
       function updateClock() {
         const clockElement = document.getElementById("clock");
         const now = new Date();
-        clockElement.textContent = `Jam: ${now.toLocaleTimeString("id-ID", {
+        clockElement.textContent = `Jam: ${now.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
         })}`;
       }
 
+      updateAttendanceStatus();
+      setInterval(updateAttendanceStatus, 60000); // Update status every minute
       setInterval(updateClock, 1000);
       updateClock(); // Initial call
     </script>

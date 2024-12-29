@@ -9,6 +9,6 @@ class Absen extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'entry_hour', 'date'];
+    protected $fillable = ['name', 'entry_hour','exit_hour', 'date'];
 
 }
