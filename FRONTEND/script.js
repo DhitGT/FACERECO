@@ -39,6 +39,15 @@ async function getAbsen() {
     }
     return await response.json();
 }
+async function getAbsenExit() {
+    // Fetch class names dynamically from the API
+    const response = await fetch('http://127.0.0.1:8000/api/absenExit');
+    if (!response.ok) {
+        console.error('Failed to fetch class names');
+        return [];
+    }
+    return await response.json();
+}
 
 const speakText = (text2) => {
     const text = text2
@@ -105,6 +114,7 @@ video.addEventListener("play", async () => {
     async function startDetection() {
         attendancePosted = false;
         let listUdahAbsen = await getAbsen();
+        let listUdahAbsenExit = await getAbsenExit();
         detectionInterval = setInterval(async () => {
             const detections = await faceapi
                 .detectAllFaces(video)
@@ -139,39 +149,9 @@ video.addEventListener("play", async () => {
                         const now2 = new Date();
                         const currentHour = now2.getHours();
 
-                        console.log("JAM 2 : ",currentHour)
-                        let lock = false
+                        console.log("JAM 2 : ", currentHour)
                         if(currentHour < 12){
-                            if(!listUdahAbsen.some((absen) => absen.name === label)){
-                                if (label === lastLabel && lock) {
-                                    console.log("masuk mas")
-                                    if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
-                                        console.log("masuk mas 2")
-                                        console.log(`Stopping detection, label "${label}" remained the same for 1 second.`);
-                                        clearInterval(detectionInterval); // Stop the detection
-        
-                                        const currentTime = getCurrentTime();
-                                        showPopup(
-                                            `Selamat datang, ${label}. Anda absen di jam ${currentTime}`
-                                        );
-                                        speakText(`Selamat datang, ${label}`)
-                                        postAttendance(label); // Call only once
-                                        attendancePosted = true; // Set the flag
-        
-                                        await new Promise((resolve) => setTimeout(resolve, 4000));
-                                        // Reset and restart detection
-                                        lastLabel = null;
-                                        lastLabelTime = null;
-                                        startDetection(); // Restart the loop
-                                    }
-                                } else {
-                                    lastLabel = label; // Update the label
-                                    lastLabelTime = now; // Update the time
-                                }
-                            }
-                            
-                        }else{
-                            if (label === lastLabel && lock) {
+                            if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("masuk mas")
                                 if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
                                     console.log("masuk mas 2")
@@ -196,8 +176,36 @@ video.addEventListener("play", async () => {
                                 lastLabel = label; // Update the label
                                 lastLabelTime = now; // Update the time
                             }
+                        }else{
+                            if (label === lastLabel && !listUdahAbsenExit.some((absen) => absen.name === label)) {
+                                console.log("keluar mas")
+                                if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
+                                    console.log("keluar mas 2")
+                                    console.log(`Stopping detection, label "${label}" remained the same for 1 second.`);
+                                    clearInterval(detectionInterval); // Stop the detection
+    
+                                    const currentTime = getCurrentTime();
+                                    showPopup(
+                                        `Hati Hati, ${label}. Anda absen keluar di jam ${currentTime}`
+                                    );
+                                    speakText(`Hati Hati, ${label}`)
+                                    postAttendance(label); // Call only once
+                                    attendancePosted = true; // Set the flag
+    
+                                    await new Promise((resolve) => setTimeout(resolve, 4000));
+                                    // Reset and restart detection
+                                    lastLabel = null;
+                                    lastLabelTime = null;
+                                    startDetection(); // Restart the loop
+                                }
+                            } else {
+                                lastLabel = label; // Update the label
+                                lastLabelTime = now; // Update the time
+                            }
                         }
-                        
+
+                       
+
                     } else {
                         // Reset the tracking if the label is "unknown"
                         lastLabel = null;

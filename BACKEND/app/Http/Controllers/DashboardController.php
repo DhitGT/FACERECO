@@ -38,6 +38,26 @@ class DashboardController extends Controller
             $attendanceRecords,
         );
     }
+    public function getExitAttendanceByCurrentTime()
+    {
+        // Get the current date and time
+        $now = Carbon::now();
+        $currentDate = $now->toDateString(); // Format YYYY-MM-DD
+        $currentTime = $now->toTimeString(); // Format HH:MM:SS
+
+        // Query the database
+        $attendanceRecords = DB::table('absens')
+            ->select('name')
+            ->whereNotNull('exit_hour') // Match the current date
+            ->whereDate('date', $currentDate)  // Entry hours before or equal to now
+            ->get();
+
+        // Return the response
+        return response()->json(
+
+            $attendanceRecords,
+        );
+    }
 
     public function store(Request $request)
     {
