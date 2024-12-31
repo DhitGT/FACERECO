@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div
+      id="clock-wrapper"
+      class="mt-6 text-lg font-bold text-white flex flex-col items-center space-y-2"
+    >
+      <div class="flex items-center space-x-2">
+        <i class="fas fa-calendar-alt text-blue-500 text-xl"></i>
+        <p id="date" class="text-xl">Tanggal akan muncul di sini</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <i class="fas fa-clock text-blue-500 text-xl"></i>
+        <p id="time" class="text-2xl">Jam akan muncul di sini</p>
+      </div>
+    </div>
+
+    <script>
+      function updateClock() {
+        const now = new Date();
+
+        // Format tanggal (contoh: Sabtu, 28 Desember 2024)
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const formattedDate = now.toLocaleDateString("id-ID", options);
+
+        // Format waktu (contoh: 14:45:30)
+        const formattedTime = now.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+
+        // Update elemen HTML
+        document.getElementById("date").innerText = formattedDate;
+        document.getElementById("time").innerText = formattedTime;
+      }
+
+      // Jalankan updateClock setiap detik
+      setInterval(updateClock, 1000);
+      updateClock();
+    </script>
+  </body>
+</html>

@@ -8,124 +8,171 @@
     <script defer src="face-api.min.js"></script>
     <script defer src="script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      #video {
-        object-fit: cover;
-      }
-
-      canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        pointer-events: none; /* Allows clicks to pass through */
-        /* border: 2px solid red; Example styling */
-        border-radius: 10px; /* Example styling */
-      }
-
-      #popup {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        /* Changed to white for non-transparent background */
-        color: black;
-        /* Changed text color to black for better visibility */
-        z-index: 1000;
-        padding: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        /* Center text */
-      }
-
-      #popup-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        /* Dark overlay */
-        z-index: 999;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
   </head>
-
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header -->
-    <header
-      class="text-center p-4 bg-blue-600 text-white rounded-lg w-full max-w-4xl mx-auto"
-    >
-      <h1 class="text-4xl font-bold">Sistem Absensi Face Recognition</h1>
-      <h2 class="text-4xl font-bold">
-        <span id="infoAbsen"></span>
-      </h2>
-
-      <p class="mt-2">SMK NEGERI 2 KOTA BEKASI</p>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center px-4">
-      <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
-        <div class="flex flex-col items-center">
-          <div
-            id="container-vidio"
-            style="position: relative; width: 600px; height: 450px"
-          >
-            <video id="video" width="600" height="450" autoplay></video>
-          </div>
-          <div id="clock" class="mt-4"></div>
-          <p class="text-gray-600 text-sm text-center mt-2">
-            Pastikan wajah terlihat jelas di kamera untuk mendeteksi secara
-            akurat.
-          </p>
-        </div>
-
-        <div class="mt-8 flex justify-center">
-          <button
-            id="start-button"
-            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition"
-          >
-            Mulai Deteksi
-          </button>
-        </div>
+  <body class="text-white font-sans">
+    <div class="max-w-[90VW] p-4">
+      <div
+        class="flex justify-between items-center bg-gradient-to-r from-purple-500 to-blue-500 p-4 rounded-t-lg"
+      >
+        <i class="fas fa-circle-notch text-4xl"> </i>
+        <h1 class="text-xl font-bold">Sistem Absensi Face Recognition</h1>
+        <i class="fas fa-circle-notch text-4xl"> </i>
       </div>
-    </main>
-
-    <!-- Modal Popup -->
-    <div id="popup-overlay"></div>
-    <div id="popup">
-      <p id="popup-message" class="text-2xl font-bold text-gray-800"></p>
-      <!-- Increased text size -->
-      <div class="mt-4 text-center">
-        <button
-          id="close-button"
-          class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+      <div class="p-4 rounded-b-lg">
+        <div class="flex gap-4">
+          <div
+            style="background-color: rgba(216, 25, 210, 0.11)"
+            class="bg-white backdrop-blur max-h-fit rounded-lg p-4"
+          >
+            <div
+              id="container-vidio"
+              style="position: relative; width: 500px; height: 380px"
+            >
+              <video id="video" width="500" height="380" autoplay></video>
+            </div>
+            <!-- <img
+              alt="Landscape image"
+              class="w-full rounded-lg"
+              height="200"
+              src="https://storage.googleapis.com/a1aa/image/LKtIWJDaSzonP1Qp2y0wSLeiIBlFMPLRl4eu8QYqqmf629fPB.jpg"
+              width="300"
+            /> -->
+          </div>
+          <div
+            style="background-color: rgba(216, 25, 210, 0.11)"
+            class="justify-start backdrop-blur w-full rounded-lg p-4 flex flex-col items-center"
+          >
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-clock text-2xl"> </i>
+              <span class="text-4xl font-bold text-red-600"> 10:00 </span>
+            </div>
+            <div class="mt-4 flex items-center space-x-2">
+              <i class="fas fa-calendar-alt text-2xl"> </i>
+              <div>
+                <p class="text-xl font-bold">Senin</p>
+                <p>19 Desember 2023</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            background-color: rgba(216, 25, 210, 0.11);
+            backdrop-filter: blur(10px);
+          "
+          class="mt-4 p-2 rounded-lg"
         >
-          Tutup
-        </button>
+          <h2 class="text-xl font-bold mb-4 text-center">Guru Pengajar</h2>
+          <div class="flex justify-around">
+            <div class="text-center">
+              <img
+                alt="Teacher image"
+                style="border: 2px solid white"
+                class="w-24 h-24 rounded-full border-1 border-white mx-auto"
+                height="100"
+                src="https://storage.googleapis.com/a1aa/image/tmEJcX0TN6YeZyAX1zQCE2Vmkm9JE77PBDD43IdHztovdffnA.jpg"
+                width="100"
+              />
+              <p class="mt-2">nama</p>
+            </div>
+            <div class="text-center">
+              <img
+                alt="Teacher image"
+                style="border: 2px solid white"
+                class="w-24 h-24 rounded-full border-1 border-white mx-auto"
+                height="100"
+                src="https://storage.googleapis.com/a1aa/image/tmEJcX0TN6YeZyAX1zQCE2Vmkm9JE77PBDD43IdHztovdffnA.jpg"
+                width="100"
+              />
+              <p class="mt-2">nama</p>
+            </div>
+            <div class="text-center">
+              <img
+                alt="Teacher image"
+                style="border: 2px solid white"
+                class="w-24 h-24 rounded-full border-1 border-white mx-auto"
+                height="100"
+                src="https://storage.googleapis.com/a1aa/image/tmEJcX0TN6YeZyAX1zQCE2Vmkm9JE77PBDD43IdHztovdffnA.jpg"
+                width="100"
+              />
+              <p class="mt-2">nama</p>
+            </div>
+            <div class="text-center">
+              <img
+                alt="Teacher image"
+                style="border: 2px solid white"
+                class="w-24 h-24 rounded-full border-1 border-white mx-auto"
+                height="100"
+                src="https://storage.googleapis.com/a1aa/image/tmEJcX0TN6YeZyAX1zQCE2Vmkm9JE77PBDD43IdHztovdffnA.jpg"
+                width="100"
+              />
+              <p class="mt-2">nama</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex my-6 flex flex-col gap-6">
+          <a
+            href="#"
+            class="flex flex-col items-center  min-h-64 bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100"
+          >
+            
+            <div class="flex flex-col justify-between p-4 leading-normal">
+              <h5
+                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 "
+              >
+                Noteworthy technology acquisitions 2021
+              </h5>
+              <p class="mb-3 font-normal text-gray-700 ">
+                Here are the biggest enterprise technology acquisitions of 2021
+                so far, in reverse chronological order.
+              </p>
+            </div>
+            <img
+              class="object-cover w-full rounded-t-lg h-full  md:w-64 md:rounded-none md:rounded-s-lg"
+              src="https://placehold.co/400"
+              alt=""
+            />
+          </a>
+          <a
+            href="#"
+            class="flex flex-col items-center  min-h-64 bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100"
+          >
+            
+            <div class="flex flex-col justify-between p-4 leading-normal">
+              <h5
+                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 "
+              >
+                Noteworthy technology acquisitions 2021
+              </h5>
+              <p class="mb-3 font-normal text-gray-700 ">
+                Here are the biggest enterprise technology acquisitions of 2021
+                so far, in reverse chronological order.
+              </p>
+            </div>
+            <img
+              class="object-cover w-full rounded-t-lg h-full  md:w-64 md:rounded-none md:rounded-s-lg"
+              src="https://placehold.co/400"
+              alt=""
+            />
+          </a>
+        </div>
+        <div class="mt-4 bg-gray-800 p-4 rounded-lg text-center">
+          <h2 class="text-2xl font-bold">REKAYASA PERANGKAT LUNAK</h2>
+        </div>
+        <div class="mt-4 text-center">
+          <p>Copyright RPL</p>
+        </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer
-      class="p-4 bg-gray-800 text-center text-white rounded-lg w-full max-w-4xl mx-auto"
-    >
-      <p>
-        &copy; 2024 Sistem Absensi Digital. Dibuat Oleh
-        <span class="text-blue-400">syptr_z & dheepy</span>.
-      </p>
-    </footer>
-
     <!-- Script -->
     <script>
-      let infoAbsen = "";
+      let sen = "";
 
       document.getElementById("infoAbsen").textContent = infoAbsen;
 
@@ -136,19 +183,19 @@
 
       const attendanceEndpoint = "http://localhost:8000/dashboard"; // Replace with your API endpoint
 
-      document.getElementById("start-button").addEventListener("click", () => {
-        // Simulate validation of the person in the database
-        const detectedPerson = validatePerson(database, "67890"); // ID of the detected person
-        if (detectedPerson) {
-          const currentTime = getCurrentTime();
-          showPopup(
-            `Selamat datang, ${detectedPerson.name}. Anda absen di jam ${currentTime}`
-          );
+      // document.getElementById("start-button").addEventListener("click", () => {
+      //   // Simulate validation of the person in the database
+      //   const detectedPerson = validatePerson(database, "67890"); // ID of the detected person
+      //   if (detectedPerson) {
+      //     const currentTime = getCurrentTime();
+      //     showPopup(
+      //       `Selamat datang, ${detectedPerson.name}. Anda absen di jam ${currentTime}`
+      //     );
 
-          // Post attendance data
-          postAttendance("dheep");
-        }
-      });
+      //     // Post attendance data
+      //     postAttendance("dheep");
+      //   }
+      // });
 
       function validatePerson(db, detectedId) {
         for (let person in db) {
@@ -162,25 +209,35 @@
       function showPopup(message) {
         const popup = document.getElementById("popup");
         const overlay = document.getElementById("popup-overlay");
-        document.getElementById("popup-message").textContent = message;
+        const popupMessage = document.getElementById("popup-message");
 
-        popup.style.display = "flex"; // Use 'flex' for fullscreen alignment
-        overlay.style.display = "block";
+        popupMessage.textContent = message;
+        popup.classList.add("show");
+        overlay.classList.add("show");
 
-        // Automatically close the popup after 1.5 seconds
+        // Menutup popup secara otomatis setelah 5 detik
         setTimeout(() => {
-          popup.style.display = "none";
-          overlay.style.display = "none";
+          closePopup();
         }, 5000);
       }
 
-      async function postAttendance(name) {
-          let flag
-        if(infoAbsen === "Absen Masuk"){
-            flag = "masuk"
-        }else{
-            flag = "keluar"
-        }
+      function closePopup() {
+        const popup = document.getElementById("popup");
+        const overlay = document.getElementById("popup-overlay");
+
+        popup.classList.remove("show");
+        overlay.classList.remove("show");
+      }
+
+      // Event listener untuk tombol tutup
+      document
+        .getElementById("close-button")
+        .addEventListener("click", closePopup);
+
+      async function postAttendance(name, flag) {
+        console.log("info absen : ", infoAbsen);
+        console.log("flag : ", flag);
+
         try {
           await fetch("http://127.0.0.1:8000/storeAbsen", {
             method: "POST",
@@ -210,13 +267,10 @@
         const currentHour = now.getHours();
         const currentMinute = now.getMinutes();
 
-        console.log("JAMM : ",currentHour)
+        console.log("JAMM : ", currentHour);
 
         // Logic for setting attendance status
-         if (
-          currentHour >= 6 &&
-          currentHour < 12
-        ) {
+        if (currentHour >= 0 && currentHour < 12) {
           infoAbsen = "Absen Masuk";
         } else if (currentHour >= 12) {
           infoAbsen = "Absen Keluar";
@@ -226,29 +280,85 @@
         document.getElementById("infoAbsen").textContent = infoAbsen;
       }
 
+      // function updateClock() {
+      //   const now = new Date();
+
+      //   // Format tanggal (contoh: Sabtu, 28 Desember 2024)
+      //   const options = {
+      //     weekday: "long",
+      //     year: "numeric",
+      //     month: "long",
+      //     day: "numeric",
+      //   };
+      //   const formattedDate = now.toLocaleDateString("id-ID", options);
+
+      //   // Format waktu (contoh: 14:45:30)
+      //   const formattedTime = now.toLocaleTimeString("id-ID", {
+      //     hour: "2-digit",
+      //     minute: "2-digit",
+      //     second: "2-digit",
+      //   });
+
+      //   // Debugging - Tampilkan hasil di console
+      //   console.log("Tanggal: ", formattedDate);
+      //   console.log("Waktu: ", formattedTime);
+
+      //   // Update elemen HTML
+      //   document.getElementById("date").innerText = formattedDate;
+      //   document.getElementById("time").innerText = formattedTime;
+      // }
+
       function getCurrentTime() {
         const now = new Date();
-        return now.toLocaleTimeString("en-US", {
+        return now.toLocaleTimeString("id-ID", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
         });
       }
 
-      function updateClock() {
-        const clockElement = document.getElementById("clock");
+      // function updateClock() {
+      //   const clockElement = document.getElementById("clock");
+      //   const now = new Date();
+      //   clockElement.textContent = `Jam: ${now.toLocaleTimeString("en-US", {
+      //     hour: "2-digit",
+      //     minute: "2-digit",
+      //     second: "2-digit",
+      //   })}`;
+      // }
+      function updateJam() {
+        // console.log("f update jam")
         const now = new Date();
-        clockElement.textContent = `Jam: ${now.toLocaleTimeString("en-US", {
+
+        // Format tanggal (contoh: Sabtu, 28 Desember 2024)
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const formattedDate = now.toLocaleDateString("id-ID", options);
+
+        // Format waktu (contoh: 14:45:30)
+        const formattedTime = now.toLocaleTimeString("id-ID", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-        })}`;
+        });
+
+        // Debugging - Menampilkan di konsol
+        // console.log("Tanggal: ", formattedDate);
+        // console.log("Waktu: ", formattedTime);
+
+        // Update elemen HTML
+        document.getElementById("date").textContent = formattedDate;
+        document.getElementById("clock").textContent = formattedTime;
       }
+      setInterval(updateJam, 1000);
+      updateJam(); // Initial call
 
       updateAttendanceStatus();
       setInterval(updateAttendanceStatus, 60000); // Update status every minute
-      setInterval(updateClock, 1000);
-      updateClock(); // Initial call
     </script>
   </body>
 </html>

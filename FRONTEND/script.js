@@ -162,8 +162,8 @@ video.addEventListener("play", async () => {
                                     showPopup(
                                         `Selamat datang, ${label}. Anda absen di jam ${currentTime}`
                                     );
-                                    speakText(`Selamat datang, ${label}`)
-                                    postAttendance(label); // Call only once
+                                    speakText(`Selamat datang, ${label},  Hari ini anda absen di jam ${currentTime}`)
+                                    postAttendance(label,'masuk'); // Call only once
                                     attendancePosted = true; // Set the flag
     
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -177,7 +177,7 @@ video.addEventListener("play", async () => {
                                 lastLabelTime = now; // Update the time
                             }
                         }else{
-                            if (label === lastLabel && !listUdahAbsenExit.some((absen) => absen.name === label)) {
+                            if (label === lastLabel && !listUdahAbsenExit.some((absen) => absen.name === label) && listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("keluar mas")
                                 if (lastLabelTime && now - lastLabelTime >= 1000 && !attendancePosted) {
                                     console.log("keluar mas 2")
@@ -188,8 +188,8 @@ video.addEventListener("play", async () => {
                                     showPopup(
                                         `Hati Hati, ${label}. Anda absen keluar di jam ${currentTime}`
                                     );
-                                    speakText(`Hati Hati, ${label}`)
-                                    postAttendance(label); // Call only once
+                                    speakText(`Hati Hati, ${label}, Anda absen keluar di jam ${currentTime}`)
+                                    postAttendance(label,'keluar'); // Call only once
                                     attendancePosted = true; // Set the flag
     
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
