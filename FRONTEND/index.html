@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Absensi dengan Face Recognition</title>
+  <script defer src="face-api.min.js"></script>
+  <script defer src="script.js"></script>
+  <script defer src="weather.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styleClock.css" />
+  <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@pqina/flip/dist/flip.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body class="text-white font-sans">
+  <video class="video-bg" autoplay muted loop>
+    <source src="bg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="max-w-[100vw] content flex flex-col jusify-between min-h-full p-4">
+    <div>
+      <div class="flex justify-between items-center bg-gradient-to-r from-purple-500 to-blue-500 p-4 rounded-t-lg">
+        <img src="/images/LOGO SMKN 2.png" class="w-24 h-24 rounded-circle" alt="">
+        <h1 class="text-4xl font-bold">Sistem Absensi Face Recognition</h1>
+        <img src="/images/LOGO RPL.png" class="w-24 h-24 rounded-circle" alt="">
+
+      </div>
+      <div class="p-4  min-h-full rounded-b-lg">
+        <div class="flex gap-4">
+          <div style="background-color: rgba(0, 0, 0, 0.11); backdrop-filter: blur(5px);"
+            class="bg-white  max-h-fit rounded-lg p-4">
+            <div id="container-vidio" style="position: relative; width: 500px; height: 380px">
+              <video id="video" width="500" height="380" autoplay></video>
+            </div>
+            <!-- <img
+                alt="Landscape image"
+                class="w-full rounded-lg"
+                height="200"
+                src="https://storage.googleapis.com/a1aa/image/LKtIWJDaSzonP1Qp2y0wSLeiIBlFMPLRl4eu8QYqqmf629fPB.jpg"
+                width="300"
+              /> -->
+          </div>
+          <div style="background-color: rgba(0, 0, 0, 0.11); backdrop-filter: blur(5px);"
+            class="justify-start  w-full rounded-lg p-4 flex flex-col items-center">
+            <div class="flex items-center  h-32 gap-3 justify-start min-w-full space-x-2">
+              <div class="tick" data-did-init="handleTickInit">
+
+                <div data-layout="horizontal fit">
+
+                  <span data-key="hours" data-transform="pad(00)" data-view="flip"></span>
+
+                  <span data-view="text" data-key="sep" class="tick-text-inline"></span>
+
+                  <span data-key="minutes" data-transform="pad(00)" data-view="flip"></span>
+
+                  <span data-view="text" data-key="sep" class="tick-text-inline"></span>
+
+                  <span data-key="seconds" data-transform="pad(00)" data-view="flip"></span>
+
+                </div>
+
+              </div>
+
+            </div>
+            <div class="mt-4 flex  min-w-full">
+              <div class="flex flex-col items-start">
+                <span id="day-name" class="text-9xl text-start font-bold"></span>
+                <span id="formatted-date" class="text-5xl text-start font-bold"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="
+              background-color: rgba(0, 0, 0, 0.11);
+              backdrop-filter: blur(5px);
+              overflow-x: hidden;border:1px solid white;
+            " class="mt-4 p-2 rounded-lg">
+          <h2 class="text-5xl font-bold mb-8 text-center">Guru Pengajar</h2>
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <!-- Slide 1 -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 border-4 border-white h-32 rounded-full mx-auto"
+                  src="/images/guru/RAMDANI,S.Kom.JPG" />
+                <p class="mt-2 text-2xl">RAMDANI,S.Kom</p>
+              </div>
+              <!-- Slide 2 -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/HANUJI, S.Kom..JPG" />
+                <p class="mt-2 text-2xl">HANUJI, S.Kom.</p>
+              </div>
+              <!-- Repeat for up to 8 slides -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Deddy Maryanto, S.Kom.jpg" />
+                <p class="mt-2 text-2xl">DEDDY MARYANTO, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/WENDY HADITTIA, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">WENDY HADITTIA, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Dra.SUWARNI.JPG" />
+                <p class="mt-2 text-2xl">Dra.SUWARNI</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/RIVAN PRASETIA, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">RIVAN PRASETIA, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Kusariwati, M.Pd.jpg" />
+                <p class="mt-2 text-2xl">Kusariwati, M.Pd</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/ATIK SUGIATI, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">ATIK SUGIATI, S.Kom</p>
+              </div>
+            </div>
+
+            <!-- Navigation -->
+            <!-- <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div> -->
+
+            <!-- Pagination -->
+            <!-- <div class="swiper-pagination"></div> -->
+          </div>
+        </div>
+        <div class="flex my-6 flex flex-col gap-6">
+          <a href="#"
+            class="flex  flex-col items-start justify-start text-start min-h-64 border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100"
+            style="background-color:rgba(0, 0, 0, 0.11); backdrop-filter:blur(5px)">
+
+            <div class="flex flex-col justify-between p-4 leading-normal">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-100">
+                Siswi Kelas XII Rekayasa Perangkat Lunak Unggulan Meraih Score TOEIC Tertinggi di ajang SMK Award Jabar
+              </h5>
+              <p class="mb-3 font-normal text-justify text-gray-200">
+                Alhamdulillah...anak Bantargebang Bekasi ada yang berprestasi dan mengharumkan nama Kota Bekasi di
+                Tingkat Provinsi Jawa
+                Barat . dialah Feli Altefa Mahendra Siswi kelas 10 SMKN2 Kota Bekasi yang telah mendapatkan penghargaan
+                Skor
+                Tertinggi TOEIC
+                (Test of English for International Communication) Se-Jabar pada ajang "SMK Awards 2022" di Grand
+                Sunshine Resort &
+                Convention Soreang,Kabupaten Bandung, Selasa (24/1/2023)
+              </p>
+            </div>
+
+            <!-- Fixed width with image stretching to full height of the parent -->
+            <img style="aspect-ratio: 1;"
+              class="border-2 border-white object-cover w-64 h-full rounded-t-lg md:w-64 md:h-full  md:rounded-lg"
+              src="https://www.smkn2kotabekasi.sch.id/assets/upload/image/Green-Organic-Warm-Food-and-Restaurant-Bio-Link-Website.png"
+              alt="" />
+          </a>
+          <a href="#"
+            class="flex flex-col items-start justify-start text-start min-h-64 border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100"
+            style="background-color:rgba(0, 0, 0, 0.11); backdrop-filter:blur(5px)">
+
+            <div class="flex flex-col justify-between p-4 leading-normal">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-100">
+                SISWA SMKN2 KOTA BEKASI MENJUARAI LOMBA SKATEBOARD PADA KEJUARAN PIALA GUBERNUR PELAJAR JUARA 2022
+              </h5>
+              <p class="mb-3 font-normal text-justify text-gray-200">
+                Dinas Pendidikan Provinsi Jawa Barat melalui UPTD Tikomdik Dinas Pendidikan Provinsi Jawa Barat telah
+                menggelar kegiatan
+                " Awarding Day Piala Gubernur Pelajar Juara 2022 " di Ballroom Hotel Holiday Inn pada Jum’at
+                (30/09/2022).
+
+                Turut berbangga, atas nama M.Agus Maulana telah mewakili SMKN2 Kota Bekasi di ajang ini dengan menjuarai
+                mata lomba
+                Skateboard.
+
+              </p>
+            </div>
+
+            <!-- Fixed width with image stretching to full height of the parent -->
+            <img style="aspect-ratio: 1;"
+              class="border-2 border-white object-cover w-64 h-full rounded-t-lg md:w-64 md:h-full  md:rounded-lg"
+              src="https://www.smkn2kotabekasi.sch.id/assets/upload/image/WhatsApp-Image-2022-10-03-at-11.37.45-AM.jpeg"
+              alt="" />
+          </a>
+
+
+        </div>
+        <div style="backdrop-filter: blur(5px); background-color: rgba(0,0,0,0.11);"
+          class=" shadow-md rounded-lg p-6  w-full">
+          <!-- <h1 class="text-5xl font-bold mb-4 text-center">Cuaca di Bantargebang</h1> -->
+          <div id="weather" class="justify-start flex ">
+            <img id="weather-icon" class=" weather-icon mb-4 w-[12em] h-[12em]" src="" alt="Weather Icon" />
+            <div class="w-full flex flex-col justify-center gap-6">
+              <p class="text-5xl font-bold" id="condition">Loading...</p>
+              <div class=" flex gap-7 justify-evenly w-full p-4">
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-temperature-high text-3xl mr-2"></i>
+                  <p class="text-3xl font-semibold" id="temperature"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-wind text-3xl mr-2"></i>
+                  <p class="text-3xl" id="wind"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-tint text-3xl mr-2"></i>
+                  <p class="text-3xl" id="humidity"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-cloud-rain text-3xl mr-2"></i>
+                  <p class="text-3xl" id="probability"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-auto text-center">
+      <p>© 2025 Software Engineering SMKN 2. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- Script -->
+
+  <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+
+    function formatDateIndonesian(date) {
+      const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const monthNames = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+        "September", "Oktober", "November", "Desember"
+      ];
+
+      const day = dayNames[date.getDay()];
+      const dayOfMonth = date.getDate();
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+
+      return `${day}, ${dayOfMonth} ${month} ${year}`;
+    }
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Format the date in Indonesian
+    const formattedDate = formatDateIndonesian(currentDate);
+
+    // Set the content in the HTML
+    document.getElementById('day-name').textContent = formattedDate.split(",")[0]; // Only the day name
+    document.getElementById('formatted-date').textContent = formattedDate.split(",")[1].trim();
+
+    let sen = "";
+
+    const swiper = new Swiper('.swiper-container', {
+      slidesPerView: 4,  // Show 4 items per slide
+      spaceBetween: 20,  // Space between slides
+      loop: true,  // Enable infinite loop
+      autoplay: {
+        delay: 3000,  // Auto slide every 3 seconds
+        disableOnInteraction: false,  // Keep autoplay after user interaction
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        // Adjust the number of visible slides at different screen widths
+        320: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 4 },
+      },
+    });
+
+    function handleTickInit(tick) {
+
+      // start interval (default is 1 second) and update clock with current time
+      Tick.helper.interval(function () {
+        var d = Tick.helper.date();
+        tick.value = {
+          sep: '.',
+          hours: d.getHours(),
+          minutes: d.getMinutes(),
+          seconds: d.getSeconds()
+        };
+      });
+
+    }
+
+    document.getElementById("infoAbsen").textContent = infoAbsen;
+
+    document.getElementById("close-button").addEventListener("click", () => {
+      popup.style.display = "none";
+      overlay.style.display = "none";
+    });
+
+    const attendanceEndpoint = "http://localhost:8000/dashboard"; // Replace with your API endpoint
+
+    // document.getElementById("start-button").addEventListener("click", () => {
+    //   // Simulate validation of the person in the database
+    //   const detectedPerson = validatePerson(database, "67890"); // ID of the detected person
+    //   if (detectedPerson) {
+    //     const currentTime = getCurrentTime();
+    //     showPopup(
+    //       `Selamat datang, ${detectedPerson.name}. Anda absen di jam ${currentTime}`
+    //     );
+
+    //     // Post attendance data
+    //     postAttendance("dheep");
+    //   }
+    // });
+
+    function validatePerson(db, detectedId) {
+      for (let person in db) {
+        if (db[person].id === detectedId) {
+          return db[person];
+        }
+      }
+      return null;
+    }
+
+    function showPopup(message) {
+      const popup = document.getElementById("popup");
+      const overlay = document.getElementById("popup-overlay");
+      const popupMessage = document.getElementById("popup-message");
+
+      popupMessage.textContent = message;
+      popup.classList.add("show");
+      overlay.classList.add("show");
+
+      // Menutup popup secara otomatis setelah 5 detik
+      setTimeout(() => {
+        closePopup();
+      }, 5000);
+    }
+
+    function closePopup() {
+      const popup = document.getElementById("popup");
+      const overlay = document.getElementById("popup-overlay");
+
+      popup.classList.remove("show");
+      overlay.classList.remove("show");
+    }
+
+    // Event listener untuk tombol tutup
+    document
+      .getElementById("close-button")
+      .addEventListener("click", closePopup);
+
+    async function postAttendance(name, flag) {
+      console.log("info absen : ", infoAbsen);
+      console.log("flag : ", flag);
+
+      try {
+        await fetch("http://127.0.0.1:8000/storeAbsen", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            flag: flag,
+          }),
+        })
+          .then((response) => response.json()) // Ensure to handle the JSON response
+          .then((data) => {
+            console.log("Success:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } catch (error) {
+        console.log("rorwr", error);
+      }
+    }
+
+    function updateAttendanceStatus() {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      console.log("JAMM : ", currentHour);
+
+      // Logic for setting attendance status
+      if (currentHour >= 0 && currentHour < 12) {
+        infoAbsen = "Absen Masuk";
+      } else if (currentHour >= 12) {
+        infoAbsen = "Absen Keluar";
+      }
+
+      // Update the status on the UI
+      document.getElementById("infoAbsen").textContent = infoAbsen;
+    }
+
+    // function updateClock() {
+    //   const now = new Date();
+
+    //   // Format tanggal (contoh: Sabtu, 28 Desember 2024)
+    //   const options = {
+    //     weekday: "long",
+    //     year: "numeric",
+    //     month: "long",
+    //     day: "numeric",
+    //   };
+    //   const formattedDate = now.toLocaleDateString("id-ID", options);
+
+    //   // Format waktu (contoh: 14:45:30)
+    //   const formattedTime = now.toLocaleTimeString("id-ID", {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    //     second: "2-digit",
+    //   });
+
+    //   // Debugging - Tampilkan hasil di console
+    //   console.log("Tanggal: ", formattedDate);
+    //   console.log("Waktu: ", formattedTime);
+
+    //   // Update elemen HTML
+    //   document.getElementById("date").innerText = formattedDate;
+    //   document.getElementById("time").innerText = formattedTime;
+    // }
+
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    }
+
+    // function updateClock() {
+    //   const clockElement = document.getElementById("clock");
+    //   const now = new Date();
+    //   clockElement.textContent = `Jam: ${now.toLocaleTimeString("en-US", {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    //     second: "2-digit",
+    //   })}`;
+    // }
+    function updateJam() {
+      // console.log("f update jam")
+      const now = new Date();
+
+      // Format tanggal (contoh: Sabtu, 28 Desember 2024)
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const formattedDate = now.toLocaleDateString("id-ID", options);
+
+      // Format waktu (contoh: 14:45:30)
+      const formattedTime = now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+
+      // Debugging - Menampilkan di konsol
+      // console.log("Tanggal: ", formattedDate);
+      // console.log("Waktu: ", formattedTime);
+
+      // Update elemen HTML
+      document.getElementById("date").textContent = formattedDate;
+      document.getElementById("clock").textContent = formattedTime;
+    }
+    setInterval(updateJam, 1000);
+    updateJam(); // Initial call
+
+    updateAttendanceStatus();
+    setInterval(updateAttendanceStatus, 60000); // Update status every minute
+  </script>
+</body>
+
+</html>
